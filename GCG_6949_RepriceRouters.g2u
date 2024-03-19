@@ -1,0 +1,58 @@
+﻿Program.Sub.Preflight.Start
+Program.External.Include.Library("1510.lib")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+v.Local.sFolder.Declare
+v.Local.sPath.Declare
+v.Local.bExists.Declare
+v.Local.sError.Declare
+v.Local.sSettings.Declare
+v.local.iCnt.Declare
+
+f.Intrinsic.Control.Try
+	'Check if project folder exists
+	f.Intrinsic.String.Build("{0}\CUSTOM\6949\",v.Caller.GlobalDir,v.Local.sFolder)
+	f.Intrinsic.File.DirExists(v.Local.sFolder,v.Local.bExists)
+	f.Intrinsic.Control.If(v.Local.bExists,=,False)
+		'Project has not been initialized and must end.
+		f.Intrinsic.Control.End
+	f.Intrinsic.Control.EndIf
+	
+	'Check if the settings file exists in the project folder
+	f.Intrinsic.String.Build("{0}GCG_6949_Settings.txt",v.Local.sFolder,v.Local.sPath)
+	f.Intrinsic.File.Exists(v.Local.sPath,v.Local.bExists)
+	f.Intrinsic.Control.If(v.Local.bExists,=,False)
+		'Create error file
+		f.Intrinsic.String.Build("{0}GCG_6949_RepriceRoutersErrors.txt",v.Local.sFolder,v.Local.sPath)
+		v.Local.sError.Set("Settings File does not exist.  Rerun the initialization menu item and try again.")
+		f.Intrinsic.File.String2File(v.Local.sPath,v.Local.sError)
+		f.Intrinsic.Control.End
+	f.Intrinsic.Control.Else
+		'Load the settings file
+		f.Intrinsic.File.File2String(v.Local.sPath,v.Local.sSettings)
+		f.Data.DataTable.CreateFromString("DT",v.Local.sSettings,"Key*!*Val","string*!*string",":",v.Ambient.NewLine)
+	f.Intrinsic.Control.EndIf
+	
+	'Check if they have picked router options to actually run it
+	f.Intrinsic.Control.If(v.Datatable.DT(2).Val!FieldValTrim,=,"Y","OR",v.Datatable.DT(0).Val!FieldValTrim,!=,"")
+		'Parse file to add to DT
+		f.Data.DataTable.AddRow("1510","Mode", "NS", "BegRouter", v.Datatable.DT(0).Val!FieldValTrim, "EndRouter", v.Datatable.DT(1).Val!FieldValTrim, "AllRouter", v.Datatable.DT(2).Val!FieldValTrim, "SetupFromWC", v.Datatable.DT(3).Val!FieldValTrim, "RuntimeFromWC",v.Datatable.DT(4).Val!FieldValTrim, "DescFromWC", v.Datatable.DT(5).Val!FieldValTrim, "DescFromInvMatl", v.Datatable.DT(6).Val!FieldValTrim, "DescFromInvRouter", v.Datatable.DT(7).Val!FieldValTrim, "PLFromInvRouter", v.Datatable.DT(8).Val!FieldValTrim, "RepriceLaborOnly", v.Datatable.DT(9).Val!FieldValTrim, "RepriceMatlOnly", v.Datatable.DT(10).Val!FieldValTrim, "UpdateAltCostRouter", v.Datatable.DT(11).Val!FieldValTrim, "AltCostRepriceQty", v.Datatable.DT(12).Val!FieldValTrim, "ZeroUCForMfgParts", v.Datatable.DT(13).Val!FieldValTrim, "RefreshLeadTimeMatl", v.Datatable.DT(14).Val!FieldValTrim, "RefreshLeadTimeOutside", v.Datatable.DT(15).Val!FieldValTrim, "UpdateRateWithInvCostIfZero", v.Datatable.DT(16).Val!FieldValTrim, "UpdateRateWithWCRateIfZero", v.Datatable.DT(17).Val!FieldValTrim)
+		
+		'Run callwapper
+		f.Intrinsic.Control.CallSub("1510Sync")
+	f.Intrinsic.Control.EndIf
+	
+f.Intrinsic.Control.Catch
+	'Create error file
+	f.Intrinsic.String.Build("{0}GCG_6949_RepriceRoutersErrors.txt",v.Local.sFolder,v.Local.sPath)
+	f.Intrinsic.File.String2File(v.Local.sPath,v.Ambient.ErrorDescription)
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndTry
+
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$5$}$20.1.8286.22461$}$1
+${$6$}$dduncan$}$20221022190754979$}$r0o+00bj735YsiGsQ60YIo/Zb+26OZQGh6K7Upfx06HEGbfUtIPXsZxaVmfgYp2XK+NYTyIoJvY=
+Program.Sub.Comments.End
