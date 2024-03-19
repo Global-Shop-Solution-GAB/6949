@@ -1,0 +1,18 @@
+Beginning Router:
+End Router:
+All Routers (Y/N):
+Pull Setup from Workcenter (Y/N):
+Pull Runtime from Workcenter (Y/N):
+Pull Description from Workcenter (Y/N):
+Pull Description from Inventory (Material) (Y/N):
+Pull Description from Inventory (Router) (Y/N):
+Pull Product Line from Inventory (Router) (Y/N):
+Reprice Labor Steps Only (Y/N):
+Reprice Material Steps Only (Y/N):
+Update Alternate Cost Router (Y/N):
+Alternate Cost Reprice Quantity:
+Zero Unit Cost for Manufactured Parts (Y/N):
+Refresh Lead Time on Material Sequences (Y/N):
+Refresh Lead Time on Outside Sequences (Y/N):
+Update Rate with Inventory Cost Even if Zero (Y/N):
+Update Rate with Workcenter Rate Even if Zero (Y/N):
