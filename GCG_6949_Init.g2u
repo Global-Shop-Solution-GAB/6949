@@ -1,0 +1,45 @@
+﻿Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.Intrinsic.Control.Try
+	v.Local.sFolder.Declare
+	v.Local.bExists.Declare
+	v.Local.sFile.declare
+	v.Local.sDocsFile.Declare
+	
+	'Create the folder if doesnt exist
+	f.Intrinsic.String.Build("{0}\CUSTOM\6949\",v.Caller.GlobalDir,v.Local.sFolder)
+	f.Intrinsic.File.DirExists(v.Local.sFolder,v.Local.bExists)
+	f.Intrinsic.Control.If(v.Local.bExists,=,False)
+		f.Intrinsic.File.CreateDir(v.Local.sFolder)
+	f.Intrinsic.Control.EndIf
+	
+	'Check if file exists in folder.  If not, move it from DOCS.
+	F.Intrinsic.String.Build("{0}GCG_6949_Settings.txt",v.Local.sFolder,v.Local.sFile)
+	f.Intrinsic.File.Exists(v.Local.sFile,v.Local.bExists)
+	f.Intrinsic.Control.If(v.Local.bExists,=,False)
+		f.Intrinsic.String.Build("{0}\GCG_6949_Settings.txt",v.Caller.DocDir,v.Local.sDocsFile)
+		f.Intrinsic.File.Exists(v.Local.sDocsFile,v.Local.bExists)
+		f.Intrinsic.Control.If(v.Local.bExists,=,False)
+			f.Intrinsic.UI.Msgbox("Settings File does not exist.  Reinstall this project from ARC and configure the settings in GCG_6949_Settings.txt.")
+			f.Intrinsic.Control.End
+		f.Intrinsic.Control.Else
+			f.Intrinsic.File.CopyOpenFile(v.Local.sDocsFile,v.Local.sFile)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.EndIf
+	
+	
+	'Open the settings file
+	F.Intrinsic.Task.ShellExec(0,"",v.Local.sFile,"","",1) 
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox("Program experienced an error.  Ending now.  Please contact GSS support.")
+f.Intrinsic.Control.EndTry
+
+f.Intrinsic.Control.End
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$5$}$20.1.8286.22461$}$1
+${$6$}$dduncan$}$20221022190719557$}$r0o+00bj735YsiGsQ60YIo/Zb+26OZQGh6K7Upfx06HEGbfUtIPXsRUx5sQyAymlz5gu6tpRISQ=
+Program.Sub.Comments.End
